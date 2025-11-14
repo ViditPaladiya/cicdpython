@@ -1,0 +1,34 @@
+name: CI - build and test
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install pytest
+
+      - name: Run tests
+        run: pytest -v
+
+      - name: Build artifact (zip)
+        run: zip -r build-output.zip .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-app-build
+          path: build-output.zip
